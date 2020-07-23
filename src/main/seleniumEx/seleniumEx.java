@@ -1,16 +1,14 @@
 package main.seleniumEx;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import javax.imageio.ImageIO;
-
 //selenium関連
 
-//ドライバは下記サイト「Selenium Client & WebDriver Language Bindings」「Java」のダウンロードリンクからダウンロード
+//サーバは下記サイト「Selenium Client & WebDriver Language Bindings」「Java」のダウンロードリンクからダウンロード
 //https://www.selenium.dev/downloads/
+//selenium-java-3.141.59.zip　をダウンロード
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -21,12 +19,6 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
-
-//画面キャプチャ関連
-//https://jar-download.com/artifacts/ru.yandex.qatools.ashot/ashot/1.5.4
-import ru.yandex.qatools.ashot.AShot;
-import ru.yandex.qatools.ashot.Screenshot;
-import ru.yandex.qatools.ashot.shooting.ShootingStrategies;
 
 /**
  * @author sss
@@ -48,7 +40,7 @@ public class seleniumEx {
 //		inputStr = args[0];
 
 		//キーボードからスクリーンキャプチャのブラウザの種類を取得
-		System.out.println("input target test browser 0:Chrome 1:IE 2:FireFox >");
+		System.out.print("input target test browser 0:Chrome 1:IE 2:FireFox >");
 	    BufferedReader com = new BufferedReader(new InputStreamReader(System.in));
     	try {
     		inputStr = com.readLine();
@@ -66,9 +58,6 @@ public class seleniumEx {
 
 		//Seleniumサンプル実行
 		doSeleniumSample();
-
-		//スクリーンキャプチャ取得
-		captImg();
 	}
 
 	/**
@@ -83,13 +72,14 @@ public class seleniumEx {
 		switch (webDriverTypeCode){
 		  case 0:
 			// Driverパスを設定
+			//ドライバは下記サイトから取得し配置する
 			//https://sites.google.com/a/chromium.org/chromedriver/downloads
 			//chromedriver_win32.zip　をダウンロード　
 			System.setProperty("webdriver.chrome.driver", "selenium/chrome/83.0/chromedriver.exe");
 
 			// Chromeドライバーインスタンスを作成
 			ChromeOptions chromeOptions = new ChromeOptions();
-				chromeOptions.addArguments("--incognito"); //シークレットモード
+//				chromeOptions.addArguments("--incognito"); //シークレットモード
 //				chromeOptions.addArguments("--headless"); //ブラウザ非表示モード
 			DesiredCapabilities capabilities = DesiredCapabilities.chrome();
 			capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
@@ -105,13 +95,11 @@ public class seleniumEx {
 			// Driverパスを設定
 			//ドライバは下記サイトから取得し配置する
 			//https://www.selenium.dev/downloads/
-			//selenium-java-3.141.59.zip　をダウンロード
-			System.setProperty("webdriver.ie.driver", "selenium/ie/3.14/IEDriverServer");
+			//IEDriverServer_Win32_3.150.1.zip　をダウンロード
+			System.setProperty("webdriver.ie.driver", "selenium/ie/3.15/IEDriverServer.exe");
 
 			// Chromeドライバーインスタンスを作成
 			InternetExplorerOptions ieOptions = new InternetExplorerOptions();
-			ieOptions.setCapability(InternetExplorerDriver.IGNORE_ZOOM_SETTING, true);
-			ieOptions.takeFullPageScreenshot();
 //				ieOptions.setCapability(InternetExplorerDriver.FORCE_CREATE_PROCESS, true);
 //				ieOptions.addCommandSwitches("-private");
 			driver = new InternetExplorerDriver(ieOptions);
@@ -130,44 +118,9 @@ public class seleniumEx {
 			// Chromeドライバーインスタンスを作成する
 			driver = new FirefoxDriver(firefoxOptions);
 			break;
-
 		}
 
 		System.out.println("End createWebDriver ");
-	}
-
-	/**
-	 * 画面キャプチャ実施
-	 * @throws InterruptedException
-	 */
-	public static void captImg() throws InterruptedException {
-
-		System.out.println("Start createWebDriverImpl ");
-
-		//Headerタイトル等を削除する場合、事前に対象のElementを削除
-//		JavascriptExecutor jexec = (JavascriptExecutor) driver;
-//		jexec.executeScript("document.getElementById('xxx').innerHTML = ''");
-
-		//Ashotライブラリでフルスクリーンショットを取得
-	    Screenshot screenshot=new AShot().shootingStrategy(ShootingStrategies.viewportPasting(1500)).takeScreenshot(driver);
-	    try {
-			ImageIO.write(screenshot.getImage(),"PNG",new File("sampleScreenShot.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		//-------------MEMO
-
-		//カレントページのみスクリーンショットを取得
-//	    File sfile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-//	    try {
-//			Files.copy(sfile.toPath(), new File("C:/jar/xxx.png").toPath());
-//		} catch (IOException e) {
-//			// TODO 自動生成された catch ブロック
-//			e.printStackTrace();
-//		}
-
-		System.out.println("End createWebDriverImpl ");
 	}
 
 	/**
@@ -187,14 +140,6 @@ public class seleniumEx {
 		Thread.sleep(1000);
 
 		searchElement.submit();
-
-		Thread.sleep(1000);
-
-		//-------------MEMO
-
-		//JavaScript実行
-//		JavascriptExecutor jexec = (JavascriptExecutor) driver;
-//		jexec.executeScript("");
 
 	}
 }
